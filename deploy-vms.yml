@@ -2,36 +2,36 @@
 - hosts: localhost
   gather_facts: no
   vars:
-    vcenter_server: "10.1.1.100"
-    vcenter_user: "administrator@vsphere.local"
-    vcenter_pass: "Pa$$w0rd"
-    datacenter_name: "Datacenter"
-    cluster_name: "Cluster"
-  tasks:
-  - name: Clone the template
+     vcenter_server: "[vcenter address]"
+    vcenter_user: "[ user ]"
+    vcenter_pass: "[ passwd ] "
+    datacenter_name: "Gotham"
+   cluster_name: "Arkham"
+ tasks:
+ - name: Clone the template
     vmware_guest:
-      hostname: "{{ vcenter_server }}"
-      username: "{{ vcenter_user }}"
-      password: "{{ vcenter_pass }}"
-      validate_certs: False
-      name: web02
-      template: template-ubuntu-18.04
-      datacenter: "{{ datacenter_name }}"
-      folder: /{{ datacenter_name }}/vm
-      cluster: "{{ cluster_name }}"
-      datastore: "iscsi-datastore01"
-      networks:
-      - name: VM Network
-        ip: 10.1.1.22
-        netmask: 255.255.255.0
-        gateway: 10.1.1.2
-        type: static
-        dns_servers: 10.1.1.2
-      customization:
-        hostname: "web02"
+         hostname: "{{ vcenter_server }}"
+         username: "{{ vcenter_user }}"
+         password: "{{ vcenter_pass }}"
+         validate_certs: False
+         name: [ name of the vm ]
+         template: [ name of the template in the vcenter: template-ubuntu16s ] 
+         datacenter: "{{ datacenter_name }}"
+         folder: /{{ datacenter_name }}/vm
+         cluster: "{{ cluster_name }}"
+         datastore: [name of the datastore: example --> "tegile_linuxds1"]
+    networks:
+    - name: vlan 100  -----→ example vlan 
+       ip: 172.0.0.0 ---→ example ip
+       netmask: 255.255.255.0
+       gateway: 172.16.100.7 
+       type: static
+       dns_servers: 172.16.100.36
+    customization:
+        hostname: [ name of the host: "name of the host" ] 
         dns_servers:
-        - 10.1.1.2
-        - 1.1.1.1
-      state: poweredon
-      wait_for_ip_address: yes
-    delegate_to: localhost
+        - 172.0.0.1
+        - 172.0.0.2
+    state: poweredon
+    wait_for_ip_address: yes
+delegate_to: localhost
